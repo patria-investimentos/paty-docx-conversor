@@ -20,6 +20,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV PATH "/usr/local/bin:/usr/bin:/bin:${HOME}/.local/bin:${PATH}"
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app/src
+ENV PORT=8000
 
 WORKDIR /app
 
@@ -36,5 +37,5 @@ COPY ./src ./src
 
 USER appuser
 
-EXPOSE 8000
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE ${PORT}
+CMD sh -c "uvicorn src.main:app --host 0.0.0.0 --port ${PORT}"
