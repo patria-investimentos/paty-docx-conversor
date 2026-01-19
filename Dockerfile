@@ -23,6 +23,18 @@ ENV PYTHONPATH=/app/src
 
 WORKDIR /app
 
+# Install system dependencies required by OpenCV (cv2) which pdf2docx depends on
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libxcb1 \
+    libxcb-shm0 \
+    libxcb-render0 \
+    libx11-6 \
+    libxext6 \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN useradd -m -u 1000 appuser && \
   chown -R appuser:appuser /app
 
