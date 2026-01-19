@@ -10,8 +10,15 @@ services:
       - PORT=${PORT:-8000}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "sh", "-c", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-8000}/health')\""]
+      test: [ "CMD", "sh", "-c", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-8000}/health')\"" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
+    networks:
+      - paty-network
+
+networks:
+  paty-network:
+    external: true
+    name: paty-network

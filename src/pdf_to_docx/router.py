@@ -14,32 +14,33 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     description="Health check endpoint",
     summary="Check service health",
-    response_class=JSONResponse
+    response_class=JSONResponse,
 )
 async def health_check():
     return {"status": "healthy"}
 
 
 @router.post(
-    "/pdf-to-docx",
+    "/",
     tags=["PDF to DOCX"],
     status_code=status.HTTP_200_OK,
     description="Recebe um arquivo PDF e converte para DOCX",
     summary="Converter PDF em DOCX",
     response_class=StreamingResponse,
-    responses=get_response_examples()
+    responses=get_response_examples(),
 )
 async def convert_pdf_file(
     pdf: dict = Depends(pdf_dependency),
 ) -> StreamingResponse:
 
-    docx_buffer = await convert_pdf_to_docx(pdf.get('data'))
+    docx_buffer = await convert_pdf_to_docx(pdf.get("data"))
 
     filename = f"{(pdf.get('filename') if 'filename' in pdf else 'download').rsplit('.', 1)[0]}.docx"
 
     return StreamingResponse(
         docx_buffer,
         media_type=DOCX_MIME_TYPE,
-        headers={"Content-Disposition": f'attachment; filename="{filename}"; charset=utf-8'},
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"; charset=utf-8'
+        },
     )
-
