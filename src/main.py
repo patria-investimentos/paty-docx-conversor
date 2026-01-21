@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from src.config import settings
 from src.pdf_to_docx.router import router as pdf_to_docx_router
+from src.html_to_docx.router import router as html_to_docx_router
 from contextlib import asynccontextmanager
 import logging
 
@@ -34,6 +35,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Mantém o router original sem prefix para compatibilidade
 app.include_router(
     pdf_to_docx_router,
+    prefix="/pdf-to-docx",
+    tags=["PDF to DOCX"],
+)
+
+# Novo endpoint para conversão direta de HTML (evita problemas com containers coloridos)
+app.include_router(
+    html_to_docx_router,
+    prefix="/html-to-docx",
+    tags=["HTML to DOCX"],
 )

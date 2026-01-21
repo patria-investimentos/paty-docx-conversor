@@ -18,7 +18,16 @@ def _convert_pdf_to_docx_sync(pdf_bytes: bytes) -> BytesIO:
     
     try:
         cv = Converter(pdf_temp_path)
-        cv.convert(docx_temp_path)
+        # Parâmetros para reduzir detecção incorreta de tabelas:
+        # - connected_border_tolerance: tolerância para bordas conectadas (default 0.5)
+        # - min_section_height: altura mínima para seção (default 20)
+        # - float_layout_tolerance: tolerância para layout flutuante (default 0.1)
+        cv.convert(
+            docx_temp_path,
+            connected_border_tolerance=0.8,  # Aumenta tolerância de bordas
+            min_section_height=30,  # Aumenta altura mínima de seção
+            float_layout_tolerance=0.2,  # Aumenta tolerância de layout
+        )
         cv.close()
         
         with open(docx_temp_path, "rb") as docx_file:
